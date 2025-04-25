@@ -5,14 +5,15 @@ import {
   getFeedbackByDateRange,
   getUserAllFeedbacks,
 } from "../controllers/feedbackController.js";
+import { verifyClient } from "../middleware/authMiddleware.js";
 
 const feedbackRoutes = express.Router();
 
 // POST /feedback - Creates new feedback
-feedbackRoutes.post("/create", createFeedback);
+feedbackRoutes.post("/create", verifyClient, createFeedback);
 
 // GET /feedback - Returns all feedback entries
-feedbackRoutes.get("/:userId", getUserAllFeedbacks);
+feedbackRoutes.get("/:userId", verifyClient, getUserAllFeedbacks);
 
 // GET /feedback/rating/:rating - Filters feedback by rating
 feedbackRoutes.get("/rating/:rating", getFeedbackByRating);
