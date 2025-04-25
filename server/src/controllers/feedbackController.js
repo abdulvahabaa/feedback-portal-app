@@ -1,34 +1,60 @@
 import Feedback from "../schemas/Feedback.js";
+import User from "../schemas/User.js";
 
 // Create a new feedback entry
 export const createFeedback = async (req, res) => {
   try {
-    const { subject, feedback, rating, picturePath, comment } = req.body;
+    const { userId, subject, feedback, rating, picturePath } = req.body;
 
     if (!subject || !feedback || !rating) {
-      return res.status(400).json({ message: "Subject, feedback and rating are required." });
+      return res
+        .status(400)
+        .json({ message: "Subject, feedback and rating are required." });
     }
 
+    const user = await User.findOne({userId:userId});
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    console.log("user",user);
+
     const newFeedback = new Feedback({
+      userRef:user._id,
       subject,
       feedback,
       rating,
       picturePath,
-      comment,
+    
     });
 
     await newFeedback.save();
-    res.status(201).json({ message: "Feedback submitted successfully", feedback: newFeedback });
+    res
+      .status(201)
+      .json({
+        message: "Feedback submitted successfully",
+        feedback: newFeedback,
+      });
   } catch (error) {
     console.error("Create Feedback Error:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
 
-// Get all feedback entries
-export const getAllFeedback = async (req, res) => {
+// Get user created all feedback entries
+export const getUserAllFeedbacks = async (req, res) => {
+  console.log("Get All Feedback",req.params);
   try {
-    const feedbacks = await Feedback.find().sort({ createdAt: -1 }); // Latest first
+    const { userId } = req.params;
+    const user = await User.findOne({userId:userId});
+    console.log(user)
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+    const feedbacks = await Feedback.find({ userRef: user._id }).sort({
+      createdAt: -1,
+    }); // Latest first
+    console.log("feedbacks",feedbacks);
     res.status(200).json(feedbacks);
   } catch (error) {
     console.error("Get All Feedback Error:", error);
@@ -55,7 +81,9 @@ export const getFeedbackByDateRange = async (req, res) => {
     const { start, end } = req.query;
 
     if (!start || !end) {
-      return res.status(400).json({ message: "Start and end dates are required." });
+      return res
+        .status(400)
+        .json({ message: "Start and end dates are required." });
     }
 
     const startDate = new Date(start);

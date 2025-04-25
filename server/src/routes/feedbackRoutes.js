@@ -1,18 +1,18 @@
 import express from "express";
 import {
   createFeedback,
-  getAllFeedback,
   getFeedbackByRating,
   getFeedbackByDateRange,
+  getUserAllFeedbacks,
 } from "../controllers/feedbackController.js";
 
 const feedbackRoutes = express.Router();
 
-// GET /feedback - Returns all feedback entries
-feedbackRoutes.get("/", getAllFeedback);
-
 // POST /feedback - Creates new feedback
-feedbackRoutes.post("/", createFeedback);
+feedbackRoutes.post("/create", createFeedback);
+
+// GET /feedback - Returns all feedback entries
+feedbackRoutes.get("/:userId", getUserAllFeedbacks);
 
 // GET /feedback/rating/:rating - Filters feedback by rating
 feedbackRoutes.get("/rating/:rating", getFeedbackByRating);

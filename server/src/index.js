@@ -24,7 +24,7 @@ app.use(bodyParser.urlencoded({ limited: "30mb", extended: true }));
 connectToDatabase();
 
 app.use("/api/users", userRoutes);
-app.use("/api/feedback", feedbackRoutes);
+app.use("/api/feedbacks", feedbackRoutes);
 app.use("/api/admin", adminRoutes);
 
 app.use((err, req, res, next) => {
