@@ -2,6 +2,7 @@ import React, { use, useState } from "react";
 import { motion } from "framer-motion";
 import { createFeedback } from "../../api/feedbackApis";
 import { useSelector } from "react-redux";
+import { form } from "framer-motion/client";
 
 const FeedbackForm = ({ onFeedbackSubmitted }) => {
   const [feedback, setFeedback] = useState("");
@@ -10,6 +11,7 @@ const FeedbackForm = ({ onFeedbackSubmitted }) => {
   const [image, setImage] = useState(null);
   const [error, setError] = useState("");
   const userId = useSelector((state) => state.userState.user.userId);
+  const token = useSelector((state) => state.userState.token);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,7 +29,7 @@ const FeedbackForm = ({ onFeedbackSubmitted }) => {
     formData.append("rating", rating);
     if (image) formData.append("image", image);
 
-    const response = await createFeedback(formData);
+    const response = await createFeedback(formData, token);
 
     if (response) {
       onFeedbackSubmitted(); // <-- Call parent to refresh

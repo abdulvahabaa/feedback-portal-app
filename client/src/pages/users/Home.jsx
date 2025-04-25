@@ -13,10 +13,12 @@ const Home = () => {
   const [selectedFeedback, setSelectedFeedback] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const userId = useSelector((state) => state.userState.user.userId);
+  const token = useSelector((state) => state.userState.token);
 
   const fetchFeedbacks = useCallback(async () => {
     try {
-      const feedbacks = await getUserFeedbacks(userId);
+     
+      const feedbacks = await getUserFeedbacks(userId, token);
       setFeedbacks(feedbacks);
       if (feedbacks.length > 0) {
         setSelectedFeedback(feedbacks[0]); // assuming newest is first

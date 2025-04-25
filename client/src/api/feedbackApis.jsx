@@ -1,16 +1,20 @@
 import { apiRequest } from "./apiClient";
 
-export const createFeedback = async (data) => {
+export const createFeedback = async (data, token) => {
   try {
-    return await apiRequest("/feedbacks/create", "POST", data);
+    return await apiRequest("/feedbacks/create", "POST", data,{
+      Authorization: `Bearer ${token}`,
+    });
   } catch (error) {
     throw new Error(error.message || "Registration failed!");
   }
 };
 
-export const getUserFeedbacks = async (userId) => {
+export const getUserFeedbacks = async (userId, token) => {
   try {
-    return await apiRequest(`/feedbacks/${userId}`, "GET");
+    return await apiRequest(`/feedbacks/${userId}`, "GET",null,{
+      Authorization: `Bearer ${token}`,
+    });
   } catch (error) {
     throw new Error(error.message || "Registration failed!");
   }

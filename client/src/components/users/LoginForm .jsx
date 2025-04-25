@@ -6,8 +6,9 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { setLogin } from "../../redux/slices/userSlice";
 import { useNavigate } from "react-router-dom";
+import feedImg from "../../assets/images/feed.jpg";
 
-export function LoginForm ({ className, ...props }) {
+export function LoginForm({ className, ...props }) {
   const [isSignup, setIsSignup] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -193,17 +194,15 @@ export function LoginForm ({ className, ...props }) {
           {/* Image Section */}
           <div className="relative hidden bg-gray-100 dark:bg-gray-800 md:block">
             <img
-              src="/images/user-panel.png"
+              src={feedImg}
               alt="user Login"
               className="absolute inset-0 h-full w-full object-cover dark:opacity-50"
             />
           </div>
         </div>
       </div>
-
-
     </div>
   );
 }
 
-export default LoginForm ;
+export default LoginForm;
