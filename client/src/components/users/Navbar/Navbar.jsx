@@ -4,9 +4,19 @@ import { FcSearch } from "react-icons/fc";
 import { FaUserCircle } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { MdFeedback } from "react-icons/md";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { setLogout } from "../../../redux/slices/userSlice";
 
 const Navbar = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { user, isAuthenticated } = useSelector((state) => state.userState);
+
+  const handleLogout = () => {
+    dispatch(setLogout());
+    navigate("/auth");
+  };
 
   return (
     <>
@@ -17,7 +27,7 @@ const Navbar = () => {
           <div className="flex items-center space-x-4 flex-grow">
             {/* Logo */}
             <div className="flex items-center space-x-2 whitespace-nowrap">
-              <MdFeedback  className="text-xl md:text-2xl text-amber-500" />
+              <MdFeedback className="text-xl md:text-2xl text-amber-500" />
               <h1 className="text-base md:text-lg font-bold text-gray-800 dark:text-white">
                 Feedback Portal
               </h1>
@@ -36,8 +46,19 @@ const Navbar = () => {
 
           {/* Right Section - Location & Profile/Login */}
           <div className="flex items-center space-x-4">
-           {isAuthenticated ? <FaUserCircle className="text-2xl text-blue-500" /> :( <FaUserCircle className="text-2xl text-red-500" />)}
-            <button className="btn bg-amber-500">logout</button>
+            {isAuthenticated ? (
+              <>
+                <FaUserCircle className="text-3xl text-blue-500" />
+                <button onClick={handleLogout} className="btn bg-red-500">
+                  Logout
+                </button>
+              </>
+            ) : (
+              <FaUserCircle className="text-2xl text-red-500" />
+            )}
+            {/* <button onClick={handleLogout} className="btn bg-amber-500">
+              Logout
+            </button> */}
           </div>
         </div>
       </nav>

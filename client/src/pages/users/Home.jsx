@@ -49,6 +49,18 @@ const Home = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Right: Feedback form or detail view */}
+          <Card className="md:col-span-2">
+            {selectedFeedback ? (
+              <FeedbackOverview data={selectedFeedback} />
+            ) : showForm ? (
+              <FeedbackForm onFeedbackSubmitted={fetchFeedbacks} />
+            ) : (
+              <p className="text-gray-500">
+                Select a feedback to view or create a new one.
+              </p>
+            )}
+          </Card>
           {/* Left: Feedbacks list */}
           <Card className="md:col-span-1">
             <h2 className="text-lg font-semibold text-gray-800 mb-4">
@@ -74,19 +86,6 @@ const Home = () => {
                 </div>
               ))}
             </div>
-          </Card>
-
-          {/* Right: Feedback form or detail view */}
-          <Card className="md:col-span-2">
-            {selectedFeedback ? (
-              <FeedbackOverview data={selectedFeedback} />
-            ) : showForm ? (
-              <FeedbackForm onFeedbackSubmitted={fetchFeedbacks} />
-            ) : (
-              <p className="text-gray-500">
-                Select a feedback to view or create a new one.
-              </p>
-            )}
           </Card>
         </div>
       </div>
