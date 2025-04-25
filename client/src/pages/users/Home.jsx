@@ -6,7 +6,6 @@ import FeedbackForm from "../../components/users/FeedbackForm";
 import FeedbackOverview from "../../components/users/FeedbackOverview";
 import { useSelector } from "react-redux";
 import { getUserFeedbacks } from "../../api/feedbackApis";
-import { formatDateTime } from "../../utils/formatDateTime";
 
 const Home = () => {
   const [feedbacks, setFeedbacks] = useState([]);
@@ -17,7 +16,6 @@ const Home = () => {
 
   const fetchFeedbacks = useCallback(async () => {
     try {
-     
       const feedbacks = await getUserFeedbacks(userId, token);
       setFeedbacks(feedbacks);
       if (feedbacks.length > 0) {
@@ -27,7 +25,7 @@ const Home = () => {
     } catch (error) {
       console.error("Error fetching feedbacks:", error);
     }
-  }, [userId]);
+  }, [userId, token]);
 
   useEffect(() => {
     if (userId) fetchFeedbacks();

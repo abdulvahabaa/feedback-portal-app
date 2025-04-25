@@ -2,8 +2,8 @@ import React from "react";
 import AdminLayout from "../../layouts/AdminLayout";
 import Card from "../../components/ui/Card";
 import { PiChartLineUp } from "react-icons/pi";
-import AdminFeedbackTable from "../../components/admin/SimpleFeedbackTable";
 import SimpleFeedbackTable from "../../components/admin/SimpleFeedbackTable";
+
 
 const AdminDashboard = () => {
   return (
@@ -75,7 +75,6 @@ const AdminDashboard = () => {
           <p className="text-xs text-gray-500">Updated a few minutes ago</p>
         </Card>
       </div>
-
       <div className="grid grid-cols-1 md:grid-cols-1 rounded-lg shadow-md overflow-hidden">
         <SimpleFeedbackTable />
       </div>
