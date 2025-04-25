@@ -1,30 +1,39 @@
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 import { motion } from "framer-motion";
+import { createFeedback } from "../../api/feedbackApis";
+import { useSelector } from "react-redux";
 
-const FeedbackForm = () => {
+const FeedbackForm = ({ onFeedbackSubmitted }) => {
   const [feedback, setFeedback] = useState("");
   const [subject, setSubject] = useState("");
   const [rating, setRating] = useState(0);
   const [image, setImage] = useState(null);
   const [error, setError] = useState("");
+  const userId = useSelector((state) => state.userState.user.userId);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!feedback || rating === 0) {
       setError("Please provide feedback and rating.");
       return;
     }
+    console.log("userId:", userId);
 
     const formData = new FormData();
+    formData.append("userId", userId);
     formData.append("subject", subject);
     formData.append("feedback", feedback);
     formData.append("rating", rating);
     if (image) formData.append("image", image);
 
-    // TODO: Send formData to backend API
+    const response = await createFeedback(formData);
 
-    console.log("Submitted:", { subject, feedback, rating, image });
+    if (response) {
+      onFeedbackSubmitted(); // <-- Call parent to refresh
+    }
+
+    console.log("Submitted:", { subject, feedback, rating });
 
     setError("");
     setSubject("");

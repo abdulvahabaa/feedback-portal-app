@@ -1,4 +1,5 @@
 import React from "react";
+import {formatDateTime} from "../../utils/formatDateTime";
 
 const FeedbackOverview = ({ data }) => {
   if (!data) return null;
@@ -13,7 +14,8 @@ const FeedbackOverview = ({ data }) => {
         {/* User Message Card (Right-aligned only for the card) */}
         <div className="flex justify-end">
           <div className="bg-green-50 p-3 rounded-2xl rounded-br-none shadow max-w-xs text-left">
-            <p className="text-sm text-gray-800">{data.message}</p>
+            <p className="text-sm font-semibold text-gray-800 mb-1">{data.subject}</p>
+            <p className="text-sm text-gray-800">{data.feedback}</p>
             {data.image && (
               <img
                 src={data.image}
@@ -24,7 +26,8 @@ const FeedbackOverview = ({ data }) => {
             {/* Separate Review section */}
             <div className="mt-2 text-xs text-gray-600">
               <p>Rating: {data.rating} ⭐</p>
-              <p>You • {data.date}</p>
+              <p>You • {formatDateTime(data.createdAt)}</p>
+              {/* <p>You • {data.date}</p> */}
             </div>
           </div>
           {/* Adding margin-right to create a gap between logo and message box */}
@@ -41,13 +44,6 @@ const FeedbackOverview = ({ data }) => {
             </div>
             <div className="bg-blue-100 p-3 rounded-2xl rounded-bl-none shadow max-w-xs">
               <p className="text-sm text-gray-800">{data.comment}</p>
-              {data.adminImage && (
-                <img
-                  src={data.adminImage}
-                  alt="Admin upload"
-                  className="mt-2 rounded-md max-w-full border border-gray-300"
-                />
-              )}
               <p className="text-xs text-gray-500 mt-1">Admin • {data.date}</p>
             </div>
           </div>

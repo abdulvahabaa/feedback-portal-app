@@ -53,7 +53,7 @@ export function LoginForm ({ className, ...props }) {
           })
         );
         toast.success("Login successful!");
-        navigate("/user/dashboard");
+        navigate("/");
       } else {
         toast.error("Login failed!");
       }

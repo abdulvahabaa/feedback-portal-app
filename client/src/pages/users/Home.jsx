@@ -1,14 +1,35 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Title from "../../components/ui/Title";
 import UserLayout from "../../layouts/UserLayout";
 import Card from "../../components/ui/Card";
 import FeedbackForm from "../../components/users/FeedbackForm";
-import { dummyFeedbacks } from "../../constants/data";
 import FeedbackOverview from "../../components/users/FeedbackOverview";
+import { useSelector } from "react-redux";
+import { getUserFeedbacks } from "../../api/feedbackApis";
+import { formatDateTime } from "../../utils/formatDateTime";
 
 const Home = () => {
+  const [feedbacks, setFeedbacks] = useState([]);
   const [selectedFeedback, setSelectedFeedback] = useState(null);
   const [showForm, setShowForm] = useState(false);
+  const userId = useSelector((state) => state.userState.user.userId);
+
+  const fetchFeedbacks = useCallback(async () => {
+    try {
+      const feedbacks = await getUserFeedbacks(userId);
+      setFeedbacks(feedbacks);
+      if (feedbacks.length > 0) {
+        setSelectedFeedback(feedbacks[0]); // assuming newest is first
+      }
+      setShowForm(false);
+    } catch (error) {
+      console.error("Error fetching feedbacks:", error);
+    }
+  }, [userId]);
+
+  useEffect(() => {
+    if (userId) fetchFeedbacks();
+  }, [fetchFeedbacks, userId]);
 
   return (
     <UserLayout>
@@ -34,11 +55,11 @@ const Home = () => {
               Recent Feedbacks
             </h2>
             <div className="space-y-2 max-h-75 overflow-y-auto pr-2">
-              {dummyFeedbacks.map((fb) => (
+              {feedbacks.map((fb) => (
                 <div
-                  key={fb.id}
+                  key={fb._id}
                   className={`p-3 rounded-lg cursor-pointer transition ${
-                    selectedFeedback?.id === fb.id
+                    selectedFeedback?._id === fb._id
                       ? "bg-blue-100"
                       : "hover:bg-gray-100"
                   }`}
@@ -47,18 +68,20 @@ const Home = () => {
                   <p className="text-sm font-medium text-gray-800">
                     {fb.subject}
                   </p>
-                  <p className="text-xs text-gray-600 truncate">{fb.message}</p>
+                  <p className="text-xs text-gray-600 truncate">
+                    {fb.feedback}
+                  </p>
                 </div>
               ))}
             </div>
           </Card>
 
-          {/* Right: Feedback detail view */}
+          {/* Right: Feedback form or detail view */}
           <Card className="md:col-span-2">
             {selectedFeedback ? (
               <FeedbackOverview data={selectedFeedback} />
             ) : showForm ? (
-              <FeedbackForm />
+              <FeedbackForm onFeedbackSubmitted={fetchFeedbacks} />
             ) : (
               <p className="text-gray-500">
                 Select a feedback to view or create a new one.
