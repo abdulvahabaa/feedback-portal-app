@@ -1,7 +1,7 @@
 import express from "express";
 import {
   loginAdmin,
-  getAllFeedbackAdmin,
+  getAllUsersFeedbacks,
   filterFeedbackByRating,
   respondToFeedback,
 } from "../controllers/adminController.js";
@@ -13,7 +13,7 @@ const adminRoutes = express.Router();
 adminRoutes.post("/login", loginAdmin);
 
 // All feedback (protected route)
-adminRoutes.get("/feedback", verifyAdmin, getAllFeedbackAdmin);
+adminRoutes.get("/feedback", verifyAdmin, getAllUsersFeedbacks);
 
 // Filter feedback by rating (protected route)
 adminRoutes.get(

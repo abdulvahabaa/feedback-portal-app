@@ -5,6 +5,7 @@ import Feedback from "../schemas/Feedback.js";
 
 // Admin login - Generate JWT token
 export const loginAdmin = async (req, res) => {
+  console.log(req.body);
   try {
     const { email, password } = req.body;
 
@@ -14,7 +15,7 @@ export const loginAdmin = async (req, res) => {
         .json({ message: "Email and password are required" });
     }
 
-    const admin = await User.findOne({ email }, { role: "admin" });
+    const admin = await User.findOne({ email });
 
     if (!admin) {
       return res.status(400).json({ message: "Invalid credentials" });
@@ -28,13 +29,16 @@ export const loginAdmin = async (req, res) => {
     }
 
     // Generate JWT token
-    const token = jwt.sign({ adminId: admin._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ adminId: admin.userId }, process.env.JWT_SECRET_ADMIN, {
       expiresIn: "1h", // Token expires in 1 hour
     });
 
     res.status(200).json({
-      message: "Login successful",
       token,
+      admin: {
+        adminId: admin.userId,
+        role: admin.role,
+      },
     });
   } catch (error) {
     console.error("Admin login error:", error);
@@ -49,7 +53,7 @@ export const logoutAdmin = (req, res) => {
 };
 
 // Admin - Get all feedback (optionally sorted by date)
-export const getAllFeedbackAdmin = async (req, res) => {
+export const getAllUsersFeedbacks = async (req, res) => {
   try {
     const sort = req.query.sort === "asc" ? 1 : -1; // Default to descending
     const feedbacks = await Feedback.find().sort({ createdAt: sort });
