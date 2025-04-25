@@ -169,7 +169,7 @@ export function LoginForm({ className, ...props }) {
                       <button
                         type="button"
                         onClick={() => setIsSignup(false)}
-                        className="text-blue-500 hover:underline"
+                        className="text-blue-500 hover:underline cursor-pointer"
                       >
                         Log in
                       </button>
@@ -180,7 +180,7 @@ export function LoginForm({ className, ...props }) {
                       <button
                         type="button"
                         onClick={() => setIsSignup(true)}
-                        className="text-blue-500 hover:underline"
+                        className="text-blue-500 hover:underline cursor-pointer"
                       >
                         Sign up
                       </button>

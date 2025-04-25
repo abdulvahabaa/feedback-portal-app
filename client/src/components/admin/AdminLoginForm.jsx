@@ -1,12 +1,56 @@
-import React from "react";
+import React, { useState } from "react";
 import adminImg from "../../assets/images/admin.png";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { loginAdmin } from "../../api/authApis";
+import { setAdminLogin } from "../../redux/slices/adminSlice";
+import { toast } from "react-toastify";
 
 export function AdminLoginForm({ className, ...props }) {
+  const [formDataAdmin, setFormDataAdmin] = useState({
+    email: "",
+    password: "",
+  });
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setFormDataAdmin({ ...formDataAdmin, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await loginAdmin({
+        email: formDataAdmin.email,
+        password: formDataAdmin.password,
+      });
+
+      if (response.token && response.admin) {
+        dispatch(
+          setAdminLogin({
+            admin: response.admin,
+            token: response.token,
+            role: response.admin.role,
+          })
+        );
+        toast.success("Login successful!");
+        navigate("/admin/dashboard");
+      } else {
+        toast.error("Invalid login credentials!");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      toast.error("Login failed! Please try again.");
+    }
+  };
+
   return (
     <div className={`flex flex-col gap-6 ${className}`} {...props}>
       <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md overflow-hidden">
         <div className="grid p-0 md:grid-cols-2">
-          <form className="p-6 md:p-8 w-full">
+          <form className="p-6 md:p-8 w-full" onSubmit={handleSubmit}>
             <div className="flex flex-col gap-6">
               {/* Heading */}
               <div className="flex flex-col items-center text-center">
@@ -30,8 +74,11 @@ export function AdminLoginForm({ className, ...props }) {
                   id="email"
                   type="email"
                   placeholder="admin@example.com"
+                  name="email"
                   required
                   className="w-full p-2 border rounded-md bg-gray-100 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500"
+                  value={formDataAdmin.email}
+                  onChange={handleChange}
                 />
               </div>
 
@@ -51,15 +98,19 @@ export function AdminLoginForm({ className, ...props }) {
                 <input
                   id="password"
                   type="password"
+                  placeholder="••••••••"
+                  name="password"
                   required
                   className="w-full p-2 border rounded-md bg-gray-100 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500"
+                  value={formDataAdmin.password}
+                  onChange={handleChange}
                 />
               </div>
 
               {/* Login Button */}
               <button
                 type="submit"
-                className="w-full p-2 text-white bg-violet-600 rounded-md hover:bg-violet-700 transition"
+                className="w-full p-2 text-white bg-violet-600 rounded-md hover:bg-violet-700 transition hover:underline cursor-pointer"
               >
                 Login
               </button>

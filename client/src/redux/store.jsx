@@ -1,5 +1,13 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import { persistStore, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from "redux-persist";
+import {
+  persistStore,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from "redux-persist";
 import { persistedReducers } from "./persistConfig";
 
 // Root reducer with persisted states

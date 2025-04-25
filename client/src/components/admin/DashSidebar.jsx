@@ -7,9 +7,17 @@ import {
 } from "react-icons/md";
 import HoverTooltip from "../ui/Tooltip";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setAdminLogout } from "../../redux/slices/adminSlice";
 
 export const Sidebar = ({ isOpen }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+    const handleLogout = () => {
+      dispatch(setAdminLogout());
+      navigate("/admin/auth");
+    };
 
   return (
     <aside
@@ -69,7 +77,8 @@ export const Sidebar = ({ isOpen }) => {
           </HoverTooltip>
           {isOpen && <span>Get Help</span>}
         </div>
-        <div className="p-2 rounded flex items-center gap-2 bg-yellow-500 cursor-pointer text-sm">
+        <div onClick={handleLogout} className="p-2 rounded flex items-center gap-2 bg-yellow-500 cursor-pointer text-sm">
+         
           <FaSignOutAlt />
           {isOpen && <span>Logout</span>}
         </div>
