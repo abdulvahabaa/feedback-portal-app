@@ -1,20 +1,22 @@
-import User from "../schemas/User.js";  // Your User model
+import jwt from "jsonwebtoken";
 
 export const verifyAdmin = async (req, res, next) => {
   try {
-    const user = await User.findById(req.user.userId);  // Get the user from the decoded token
+    const token = req.headers.authorization.split(" ")[1];
 
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+    if (!token) {
+      return res.status(401).json({ message: "Not authorized" });
     }
 
-    if (user.role !== "admin") {
-      return res.status(403).json({ message: "Access denied: Admins only" });
-    }
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_ADMIN);
 
-    next();  // If user is admin, proceed to the next middleware or route handler
+    req.user = decoded;
+    next();
   } catch (error) {
-    console.error("Admin verification error:", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error(error);
+    if (error.name === "TokenExpiredError") {
+      return res.status(401).json({ message: "Token expired" });
+    }
+    res.status(401).json({ message: "Not authorized" });
   }
 };

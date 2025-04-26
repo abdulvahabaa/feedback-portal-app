@@ -18,7 +18,7 @@ const AdminDashboard = () => {
               <span>Details</span>
             </button>
           </div>
-          <div className="text-2xl font-bold text-gray-900">84</div>
+          <div className="text-2xl font-bold text-gray-900">4</div>
           <p className="text-sm font-semibold text-green-600 mt-2">
             New feedbacks submitted today
           </p>
@@ -34,7 +34,7 @@ const AdminDashboard = () => {
               <span>Details</span>
             </button>
           </div>
-          <div className="text-2xl font-bold text-gray-900">4,565</div>
+          <div className="text-2xl font-bold text-gray-900">15</div>
           <p className="text-sm font-semibold text-green-600 mt-2">
             Feedbacks received this week
           </p>
@@ -50,7 +50,7 @@ const AdminDashboard = () => {
               <span>Details</span>
             </button>
           </div>
-          <div className="text-2xl font-bold text-gray-900">8,465</div>
+          <div className="text-2xl font-bold text-gray-900">15</div>
           <p className="text-sm font-semibold text-green-600 mt-2">
             Users joined in the last 30 days
           </p>
@@ -68,7 +68,7 @@ const AdminDashboard = () => {
               <span>Details</span>
             </button>
           </div>
-          <div className="text-2xl font-bold text-gray-900">65</div>
+          <div className="text-2xl font-bold text-gray-900">15</div>
           <p className="text-sm font-semibold text-green-600 mt-2">
             Feedbacks not yet addressed
           </p>

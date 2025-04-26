@@ -17,6 +17,10 @@ export const loginAdmin = async (req, res) => {
 
     const admin = await User.findOne({ email });
 
+    if (admin.role !== "admin") {
+      throw new Error("User has no admin permissions");
+    }
+
     if (!admin) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
@@ -29,9 +33,13 @@ export const loginAdmin = async (req, res) => {
     }
 
     // Generate JWT token
-    const token = jwt.sign({ adminId: admin.userId }, process.env.JWT_SECRET_ADMIN, {
-      expiresIn: "1h", // Token expires in 1 hour
-    });
+    const token = jwt.sign(
+      { adminId: admin.userId },
+      process.env.JWT_SECRET_ADMIN,
+      {
+        expiresIn: "1h", // Token expires in 1 hour
+      }
+    );
 
     res.status(200).json({
       token,
@@ -46,17 +54,11 @@ export const loginAdmin = async (req, res) => {
   }
 };
 
-// Admin logout - Invalidate the token (on client-side)
-export const logoutAdmin = (req, res) => {
-  // No real server-side logout in JWT (tokens expire), but you can instruct the client to delete token
-  res.status(200).json({ message: "Logout successful" });
-};
-
 // Admin - Get all feedback (optionally sorted by date)
 export const getAllUsersFeedbacks = async (req, res) => {
+  console.log("Admin Get All Feedback");
   try {
-    const sort = req.query.sort === "asc" ? 1 : -1; // Default to descending
-    const feedbacks = await Feedback.find().sort({ createdAt: sort });
+    const feedbacks = await Feedback.find().sort({ createdAt: -1 });
 
     res.status(200).json(feedbacks);
   } catch (error) {

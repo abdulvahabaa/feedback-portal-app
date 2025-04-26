@@ -13,7 +13,10 @@ const adminRoutes = express.Router();
 adminRoutes.post("/login", loginAdmin);
 
 // All feedback (protected route)
-adminRoutes.get("/feedback", verifyAdmin, getAllUsersFeedbacks);
+adminRoutes.get("/feedbacks", verifyAdmin, getAllUsersFeedbacks);
+
+// Respond to feedback (protected route)
+adminRoutes.patch("/feedback/respond/:id", respondToFeedback);
 
 // Filter feedback by rating (protected route)
 adminRoutes.get(
@@ -22,7 +25,6 @@ adminRoutes.get(
   filterFeedbackByRating
 );
 
-// Respond to feedback (protected route)
-adminRoutes.patch("/feedback/respond/:id", verifyAdmin, respondToFeedback);
+
 
 export default adminRoutes;
