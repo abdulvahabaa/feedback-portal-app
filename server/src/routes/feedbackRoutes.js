@@ -6,11 +6,17 @@ import {
   getUserAllFeedbacks,
 } from "../controllers/feedbackController.js";
 import { verifyClient } from "../middleware/authMiddleware.js";
+import upload from "../utils/multer.js";
 
 const feedbackRoutes = express.Router();
 
 // POST /feedback - Creates new feedback
-feedbackRoutes.post("/create", verifyClient, createFeedback);
+feedbackRoutes.post(
+  "/create",
+  verifyClient,
+  upload.single("image"),
+  createFeedback
+);
 
 // GET /feedback - Returns all feedback entries
 feedbackRoutes.get("/:userId", verifyClient, getUserAllFeedbacks);

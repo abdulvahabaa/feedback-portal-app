@@ -25,6 +25,4 @@ adminRoutes.get(
   filterFeedbackByRating
 );
 
-
-
 export default adminRoutes;

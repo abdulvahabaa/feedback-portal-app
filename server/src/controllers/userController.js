@@ -10,7 +10,9 @@ export const signupUser = async (req, res) => {
 
     // Validate required input fields
     if (!name || !email || !password) {
-      return res.status(400).json({ message: "Name, email and password are required" });
+      return res
+        .status(400)
+        .json({ message: "Name, email and password are required" });
     }
 
     // Check if a user already exists with the same email
@@ -53,13 +55,22 @@ export const loginUser = async (req, res) => {
 
     // Validate input fields
     if (!email || !password) {
-      return res.status(400).json({ message: "Email and password are required" });
+      return res
+        .status(400)
+        .json({ message: "Email and password are required" });
     }
 
     // Find the user by email
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(400).json({ message: "Invalid email or password" });
+    }
+    // console.log(user.role)
+
+    if (user.role !== "client" && user.role !== "admin") {
+      return res
+        .status(400)
+        .json({ message: "User has no aceess permissions" });
     }
 
     // Verify the provided password against the hashed password

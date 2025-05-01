@@ -1,8 +1,7 @@
-import React, { use, useState } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { createFeedback } from "../../api/feedbackApis";
 import { useSelector } from "react-redux";
-import { form } from "framer-motion/client";
 
 const FeedbackForm = ({ onFeedbackSubmitted }) => {
   const [feedback, setFeedback] = useState("");

@@ -3,6 +3,7 @@ import multer from "multer";
 // Set up storage engine for multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
+    console.log("File is being stored in /uploads");
     cb(null, "uploads/"); // Folder to store uploaded images temporarily
   },
   filename: (req, file, cb) => {

@@ -11,21 +11,24 @@ export async function apiRequest(
   headers = {}
 ) {
   try {
+    const isFormData = body instanceof FormData;
+
     const response = await axios({
       url: `${API_BASE_URL}${endpoint}`,
       method,
       data: body,
       headers: {
-        "Content-Type": "application/json",
+        ...(isFormData ? {} : { "Content-Type": "application/json" }),
         ...headers,
       },
     });
+
     return response.data;
   } catch (error) {
     console.error("API Request Failed:", error);
-    // Axios wraps error in response
     throw new Error(
       error.response?.data?.message || error.message || "API Error"
     );
   }
 }
+

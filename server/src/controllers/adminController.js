@@ -5,7 +5,7 @@ import Feedback from "../schemas/Feedback.js";
 
 // Admin login - Generate JWT token
 export const loginAdmin = async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   try {
     const { email, password } = req.body;
 
@@ -56,7 +56,7 @@ export const loginAdmin = async (req, res) => {
 
 // Admin - Get all feedback (optionally sorted by date)
 export const getAllUsersFeedbacks = async (req, res) => {
-  console.log("Admin Get All Feedback");
+  // console.log("Admin Get All Feedback");
   try {
     const feedbacks = await Feedback.find().sort({ createdAt: -1 });
 

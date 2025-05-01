@@ -7,14 +7,32 @@ import AdminLayout from "../layouts/AdminLayout";
 import { useSelector } from "react-redux";
 
 const AdminRoutes = () => {
+  const { isAuthenticated, role } = useSelector((state) => state.adminState);
+
+  const isAllowedRole = role === "admin";
+
   return (
     <Routes>
-      <Route path="/auth" element={<AdminAuth />} />
+      <Route
+        path="/auth"
+        element={
+          isAuthenticated && isAllowedRole ? <AdminDashboard /> : <AdminAuth />
+        }
+      />
       <Route
         path="/*"
         element={
           <Routes>
-            <Route path="dashboard" element={<AdminDashboard />} />
+            <Route
+              path="dashboard"
+              element={
+                isAuthenticated && isAllowedRole ? (
+                  <AdminDashboard />
+                ) : (
+                  <AdminAuth />
+                )
+              }
+            />
             <Route path="*" element={<NotFound />} />
           </Routes>
         }

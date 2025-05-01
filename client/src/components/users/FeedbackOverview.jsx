@@ -16,11 +16,11 @@ const FeedbackOverview = ({ data }) => {
           <div className="bg-green-50 p-3 rounded-2xl rounded-br-none shadow max-w-xs text-left">
             <p className="text-sm font-semibold text-gray-800 mb-1">{data.subject}</p>
             <p className="text-sm text-gray-800">{data.feedback}</p>
-            {data.image && (
+            {data.picturePath && (
               <img
-                src={data.image}
+                src={data.picturePath}
                 alt="User upload"
-                className="mt-2 rounded-md max-w-full border border-gray-300"
+                className="mt-2 rounded-md w-full border border-gray-300"
               />
             )}
             {/* Separate Review section */}

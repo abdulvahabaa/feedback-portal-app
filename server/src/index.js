@@ -28,8 +28,8 @@ app.use("/api/feedbacks", feedbackRoutes);
 app.use("/api/admin", adminRoutes);
 
 app.use((err, req, res, next) => {
-  console.error("Global Error:", err.stack);  
-  res.status(500).json({ message: "Something went wrong!" }); 
+  console.error("Global Error:", err.stack);
+  res.status(500).json({ message: "Something went wrong!" });
 });
 
 app.listen(PORT, () => {
@@ -37,4 +37,3 @@ app.listen(PORT, () => {
     `Process ID ${process.pid}: Server running on PORT ${PORT} in Dev Mode`
   );
 });
-

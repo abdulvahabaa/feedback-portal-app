@@ -1,10 +1,13 @@
 import Feedback from "../schemas/Feedback.js";
 import User from "../schemas/User.js";
+import { uploadImageToCloudinary } from "../utils/cloudinary.js";
 
 // Create a new feedback entry
 export const createFeedback = async (req, res) => {
+  console.log("BODY:", req.body);
+  console.log("FILE:", req.file); // ✅ Works here
   try {
-    const { userId, subject, feedback, rating, picturePath } = req.body;
+    const { userId, subject, feedback, rating } = req.body;
 
     if (!subject || !feedback || !rating) {
       return res
@@ -12,29 +15,32 @@ export const createFeedback = async (req, res) => {
         .json({ message: "Subject, feedback and rating are required." });
     }
 
-    const user = await User.findOne({userId:userId});
+    const user = await User.findOne({ userId: userId });
     if (!user) {
       return res.status(404).json({ message: "User not found." });
     }
 
-    console.log("user",user);
+    let picturePath = "";
+
+    if (req.file) {
+      const cloudinaryResult = await uploadImageToCloudinary(req.file);
+      console.log("Cloudinary Result:", cloudinaryResult);
+      picturePath = cloudinaryResult.secure_url; // Use the secure URL
+    }
 
     const newFeedback = new Feedback({
-      userRef:user._id,
+      userRef: user._id,
       subject,
       feedback,
       rating,
       picturePath,
-    
     });
 
     await newFeedback.save();
-    res
-      .status(201)
-      .json({
-        message: "Feedback submitted successfully",
-        feedback: newFeedback,
-      });
+    res.status(201).json({
+      message: "Feedback submitted successfully",
+      feedback: newFeedback,
+    });
   } catch (error) {
     console.error("Create Feedback Error:", error);
     res.status(500).json({ message: "Internal server error" });
@@ -43,18 +49,18 @@ export const createFeedback = async (req, res) => {
 
 // Get user created all feedback entries
 export const getUserAllFeedbacks = async (req, res) => {
-  console.log("Get All Feedback",req.params);
+  // console.log("Get All Feedback",req.params);
   try {
     const { userId } = req.params;
-    const user = await User.findOne({userId:userId});
-    console.log(user)
+    const user = await User.findOne({ userId: userId });
+    // console.log(user)
     if (!user) {
       return res.status(404).json({ message: "User not found." });
     }
     const feedbacks = await Feedback.find({ userRef: user._id }).sort({
       createdAt: -1,
     }); // Latest first
-    console.log("feedbacks",feedbacks);
+    // console.log("feedbacks",feedbacks);
     res.status(200).json(feedbacks);
   } catch (error) {
     console.error("Get All Feedback Error:", error);
