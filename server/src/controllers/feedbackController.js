@@ -1,7 +1,7 @@
 import Feedback from "../schemas/Feedback.js";
 import User from "../schemas/User.js";
 import { uploadImageToCloudinary } from "../utils/cloudinary.js";
-
+import fs from "fs";
 // Create a new feedback entry
 export const createFeedback = async (req, res) => {
   console.log("BODY:", req.body);
@@ -26,6 +26,9 @@ export const createFeedback = async (req, res) => {
       const cloudinaryResult = await uploadImageToCloudinary(req.file);
       console.log("Cloudinary Result:", cloudinaryResult);
       picturePath = cloudinaryResult.secure_url; // Use the secure URL
+      fs.unlink(req.file.path, (err) => {
+        if (err) console.error("Failed to delete temp file:", err);
+      });
     }
 
     const newFeedback = new Feedback({

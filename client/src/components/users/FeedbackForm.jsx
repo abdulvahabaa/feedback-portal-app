@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { createFeedback } from "../../api/feedbackApis";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const FeedbackForm = ({ onFeedbackSubmitted }) => {
   const [feedback, setFeedback] = useState("");
@@ -9,6 +11,8 @@ const FeedbackForm = ({ onFeedbackSubmitted }) => {
   const [rating, setRating] = useState(0);
   const [image, setImage] = useState(null);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const userId = useSelector((state) => state.userState.user.userId);
   const token = useSelector((state) => state.userState.token);
 
@@ -19,28 +23,38 @@ const FeedbackForm = ({ onFeedbackSubmitted }) => {
       setError("Please provide feedback and rating.");
       return;
     }
-    console.log("userId:", userId);
 
-    const formData = new FormData();
-    formData.append("userId", userId);
-    formData.append("subject", subject);
-    formData.append("feedback", feedback);
-    formData.append("rating", rating);
-    if (image) formData.append("image", image);
-
-    const response = await createFeedback(formData, token);
-
-    if (response) {
-      onFeedbackSubmitted(); // <-- Call parent to refresh
-    }
-
-    console.log("Submitted:", { subject, feedback, rating });
-
+    setLoading(true);
     setError("");
-    setSubject("");
-    setFeedback("");
-    setRating(0);
-    setImage(null);
+
+    try {
+      const formData = new FormData();
+      formData.append("userId", userId);
+      formData.append("subject", subject);
+      formData.append("feedback", feedback);
+      formData.append("rating", rating);
+      if (image) formData.append("image", image);
+
+      const response = await createFeedback(formData, token);
+
+      if (response) {
+        toast.success("Feedback submitted successfully!");
+        onFeedbackSubmitted(); // Refresh parent
+      } else {
+        toast.error("Something went wrong while submitting feedback.");
+      }
+
+      // Clear form
+      setSubject("");
+      setFeedback("");
+      setRating(0);
+      setImage(null);
+    } catch (err) {
+      console.error(err);
+      toast.error("Error submitting feedback. Try again later.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -95,12 +109,44 @@ const FeedbackForm = ({ onFeedbackSubmitted }) => {
         {error && <p className="text-red-500 text-medium">{error}</p>}
 
         <motion.button
-          type="submit"
-          whileTap={{ scale: 0.95 }}
-          className="px-6 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition"
-        >
-          Submit Feedback
-        </motion.button>
+  type="submit"
+  whileTap={{ scale: 0.95 }}
+  disabled={loading}
+  className={`px-6 py-2 rounded-lg shadow transition flex items-center justify-center ${
+    loading
+      ? "bg-gray-400 cursor-not-allowed"
+      : "bg-blue-600 hover:bg-blue-700 text-white"
+  }`}
+>
+  {loading ? (
+    <div className="flex items-center justify-center space-x-2">
+      <svg
+        className="animate-spin h-5 w-5 text-white"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <circle
+          className="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          strokeWidth="4"
+        ></circle>
+        <path
+          className="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+        ></path>
+      </svg>
+      <span>Submitting...</span>
+    </div>
+  ) : (
+    "Submit Feedback"
+  )}
+</motion.button>
+
       </form>
     </motion.div>
   );
